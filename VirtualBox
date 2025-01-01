@@ -1,0 +1,7 @@
+#### Network Config 
+## Access VM from local SSH and internet from VMs
+   Settings / Network / Adapter 1
+     Attached To : Bridge Adapter
+     Name : Hyper-V Virtual Ethernet Adapter
+
+Not Important : In Bridge Mode dont select Wifi adapter otherwise it attributes the same IP to all VM as they have ve same MAC adress
