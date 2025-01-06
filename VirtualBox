@@ -1,38 +1,39 @@
+
 #### Virtual Box - Ubuntu - Virtual Box - Insatll Guest Additions
-      https://askubuntu.com/questions/22743/how-do-i-install-guest-additions-in-a-virtualbox-vm
-      
-      Oracle Studio Manager : Settings / System / Motherboard / Pointing Device / USB Tablete
-      
-      $ sudo apt update
-      $ sudo apt install build-essential linux-headers-$(uname -r) -y
-      
-      sudo apt-get install linux-headers-$(uname -r)
-      
-      mount /dev/cdrom /mnt              # or any other mountpoint
-      cd /mnt
-      ./VBoxLinuxAdditions.run
-      reboot
-      
-      
-      (sudo sh VBoxLinuxAdditions.run uninstall)
-      
-      sudo vbox-uninstall-guest-additions
+https://askubuntu.com/questions/22743/how-do-i-install-guest-additions-in-a-virtualbox-vm
+
+Oracle Studio Manager : Settings / System / Motherboard / Pointing Device / USB Tablete
+
+$ sudo apt update
+$ sudo apt install build-essential linux-headers-$(uname -r) -y
+
+sudo apt-get install linux-headers-$(uname -r)
+
+mount /dev/cdrom /mnt              # or any other mountpoint
+cd /mnt
+./VBoxLinuxAdditions.run
+reboot
+
+
+(sudo sh VBoxLinuxAdditions.run uninstall)
+
+sudo vbox-uninstall-guest-additions
 
 
 #### ifconfig
-   sudo apt install net-tools
+sudo apt install net-tools
 
 
 #### Ad SSH User
-   vi /etc/ssh/sshd_config
-   
-   And add a line saying
-   AllowUsers user1 user2
-   
-   service ssh restart
-   
-   Connection
-   ssh -p 33556 yourusername@10.20.30.40
+vi /etc/ssh/sshd_config
+
+And add a line saying
+AllowUsers user1 user2
+
+service ssh restart
+
+COnnection
+ssh -p 33556 yourusername@10.20.30.40
 
 #### VBox Network : Network / Attached To :  
 	-	Internal Networking (entre VMs)
@@ -82,6 +83,7 @@ https://docs.docker.com/engine/install/ubuntu/
 		
 		
 #### VBox Clone VM - rename host
+Settings / Network / Mac Adress / Generate (Set a different MAC from copied VM)
 sudo vi /etc/hostname
 sudo nano /etc/hosts
 sudo reboot
@@ -96,14 +98,58 @@ https://www.nakivo.com/blog/virtualbox-network-setting-guide/
 virtualbox host network access vm
 https://serverfault.com/questions/225155/virtualbox-how-to-set-up-networking-so-both-host-and-guest-can-access-internet
 
+## Show Gateway IP Adres
+ip route show 
+
+#### Set static IP adres Ubuntu
+ sudo vi /etc/netplan/50-cloud-init.yaml 
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+	enp0s3:
+	 dhcp4: no
+	 addresses: [172.20.170.60/24]
+	 gateway4: 172.20.160.1
+	 nameservers:
+	   addresses: [8.8.8.8,8.8.4.4]
+
+
+########  HyperV && VirtualBox && Wifi Router Static DHCP IP
+	## HyperV Yönetici :
+		Sanal Anahtar Yöneticicisi
+			Yeni sanal ağ anahtarı
+				Ad : Hyper-V Custom Switch
+				Dış Ağa : Qualcom Atheros... Wireless Network Adabter
+				Check : Yönetim işletim sisteminin bu ağ bağdaştırıcısını paylaşmasına izin version
+				
+	## Windows Ağ Bağlantılırarı
+		Hyper-V Virtual Ethernet Adapter #2
+			
+	## VirtualBox VM :
+		Ayarlar :
+			Network:
+				Adapter 1 :
+					Attached To : Bridge Adapter
+					Name : Hyper-V Virtual Ethernet Adapter #2
+					Promiscious Mode : Deny
+					Cable Connecter :  Checked
+					
+	## VM Ubuntu startr
+	sudo cat /etc/netplan/50-cloud-init.yaml
+		network:
+			ethernets:
+				enp0s3:
+					dhcp: true
+			version: 2
+			
+	## Internet Box Admin UI : http://192.168.1.1/
+		Set Static IP for   VM Network / MAC Adress
 
 
 
 
-### Network Config 
-## Access VM from local SSH and internet from VMs
-   Settings / Network / Adapter 1
-     Attached To : Bridge Adapter
-     Name : Hyper-V Virtual Ethernet Adapter
 
-Not Important : In Bridge Mode dont select Wifi adapter otherwise it attributes the same IP to all VM as they have ve same MAC adress
+
+
+
